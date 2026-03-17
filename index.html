@@ -4,140 +4,211 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>2026毕业刊 | 齿轮•转向未来</title>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
     <style>
-        :root { --bg: #000; --neon: #00f2ff; --red: #800000; }
-        * { box-sizing: border-box; }
-        body { margin: 0; background: var(--bg); color: #fff; font-family: sans-serif; overflow-x: hidden; }
+        :root {
+            --bg: #000;
+            --neon: #00f2ff;
+            --school-red: #800000;
+            --text-main: #333;
+        }
 
-        /* 封面层 */
+        * { box-sizing: border-box; }
+        body { margin: 0; background: var(--bg); color: #fff; font-family: "PingFang SC", "Microsoft YaHei", sans-serif; overflow-x: hidden; }
+
+        /* --- 封面转场层 --- */
         .hero-section {
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            z-index: 100; background: #000; pointer-events: none;
+            z-index: 100; background: #000; pointer-events: none; overflow: hidden;
+            will-change: transform, opacity;
         }
-        #gearIcon { font-size: 8rem; text-shadow: 0 0 20px var(--neon); }
-        .hero-title { font-size: 3.5rem; margin: 10px 0; text-shadow: 0 0 15px var(--neon); }
-        .hero-subtitle { font-size: 1.5rem; color: var(--neon); }
 
-        /* 核心：必须有足够的滚动高度才能“拉下去” */
-        .scroll-space { height: 200vh; } 
+        /* 背景图片：请确保文件夹内有 bg.jpg */
+        .hero-bg {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7)), 
+                        url('bg.jpg') center/cover no-repeat;
+            z-index: -1;
+        }
 
-        /* 正文区 */
+        #gearIcon { font-size: clamp(5rem, 15vw, 8rem); text-shadow: 0 0 20px var(--neon); }
+        .hero-title { font-size: clamp(2rem, 8vw, 3.5rem); margin: 15px 0; text-shadow: 0 0 15px var(--neon); font-weight: bold; text-align: center; }
+        .hero-subtitle { font-size: clamp(1rem, 4vw, 1.5rem); color: var(--neon); letter-spacing: 2px; }
+
+        /* 滚动空间：控制转场速度 */
+        .scroll-space { height: 250vh; }
+
+        /* --- 主内容区 --- */
         .main-content {
-            position: relative; z-index: 50; background: #fff; color: #333;
-            border-radius: 40px 40px 0 0; padding-bottom: 100px;
+            position: relative; z-index: 50; background: #fff; color: var(--text-main);
+            border-radius: 40px 40px 0 0; box-shadow: 0 -20px 50px rgba(0,0,0,0.5);
+            padding-bottom: 100px;
         }
-        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+
+        /* 导航栏 */
+        nav {
+            position: sticky; top: 0; background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(10px); padding: 15px; display: flex; 
+            gap: 20px; overflow-x: auto; z-index: 60; border-bottom: 1px solid #eee;
+        }
+        nav a { color: var(--text-main); text-decoration: none; font-weight: bold; white-space: nowrap; font-size: 0.9rem; }
+        nav a:hover { color: var(--school-red); }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+
+        /* 章节样式 */
+        section { padding: 80px 0; border-bottom: 1px solid #f0f0f0; opacity: 0; transform: translateY(30px); }
+        h2 { font-size: 2.2rem; color: var(--school-red); border-left: 10px solid var(--school-red); padding-left: 15px; margin-bottom: 40px; }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
+        .card { background: #fafafa; padding: 25px; border-radius: 20px; border: 1px solid #eee; }
         
-        /* 这里的 section 就是你的清单章节 */
-        section { padding: 80px 0; border-bottom: 1px solid #eee; opacity: 0; transform: translateY(30px); }
-        h2 { color: var(--red); border-left: 8px solid var(--red); padding-left: 15px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
-        .card { background: #f9f9f9; padding: 20px; border-radius: 15px; border: 1px solid #ddd; }
-        
-        /* 导航 */
-        nav { position: sticky; top: 0; background: rgba(255,255,255,0.9); padding: 15px; display: flex; gap: 15px; overflow-x: auto; z-index: 60; border-bottom: 1px solid #ddd; }
-        nav a { color: #333; text-decoration: none; font-weight: bold; white-space: nowrap; }
+        .contact-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .contact-table th, .contact-table td { padding: 12px; border: 1px solid #ddd; text-align: left; font-size: 0.9rem; }
+        .contact-table th { background: #f5f5f5; }
+
+        footer { text-align: center; padding: 50px; color: #999; font-size: 0.8rem; }
     </style>
 </head>
 <body>
 
     <div class="hero-section" id="hero">
-        <div id="gearIcon">⚙️</div>
-        <h1 class="hero-title">齿轮•转向未来</h1>
-        <div class="hero-subtitle">2026年毕联会</div>
+        <div class="hero-bg" id="heroBg"></div>
+        <div id="gearContainer" style="text-align: center;">
+            <div id="gearIcon">⚙️</div>
+            <h1 class="hero-title">齿轮•转向未来</h1>
+            <div class="hero-subtitle">2026年毕联会</div>
+        </div>
     </div>
 
     <div class="scroll-space"></div>
 
     <main class="main-content">
         <nav>
-            <a href="#school">学校概览</a>
-            <a href="#principals">致辞篇</a>
+            <a href="#principals">长官致辞</a>
+            <a href="#school">学校概况</a>
             <a href="#graduates">毕业生</a>
             <a href="#activities">校园活动</a>
+            <a href="#groups">联课团体</a>
             <a href="#committee">编委会</a>
         </nav>
 
         <div class="container">
-            <section id="school">
-                <h2>学校简介</h2>
+            <section id="principals">
+                <h2>致辞篇</h2>
                 <div class="grid">
-                    <div class="card"><h3>校徽/校训</h3><p>校徽、校歌、中华颂、创造奇迹、八大信条</p></div>
-                    <div class="card"><h3>校史</h3><p>学校简介与历史长廊</p></div>
+                    <div class="card"><h3>董事长致辞</h3><p>内容占位：在此处填入董事长给毕业生的勉励语...</p></div>
+                    <div class="card"><h3>校长致辞</h3><p>内容占位：在此处填入校长的话...</p></div>
+                    <div class="card"><h3>商会代表</h3><p>五大商会代表赠言...</p></div>
+                </div>
+                <div class="card" style="margin-top: 20px;">
+                    <h3>教职员赠言</h3>
+                    <p>老师们的心里话...</p>
                 </div>
             </section>
 
-            <section id="principals">
-                <h2>长官致辞</h2>
+            <section id="school">
+                <h2>学校概况</h2>
                 <div class="grid">
-                    <div class="card"><h4>董事长</h4><p>致辞内容...</p></div>
-                    <div class="card"><h4>校长</h4><p>致辞内容...</p></div>
-                    <div class="card"><h4>五大商会</h4><p>代表致辞...</p></div>
+                    <div class="card">
+                        <h3>精神堡垒</h3>
+                        <p>校徽、校歌、中华颂、创造奇迹、八大信条、校训。</p>
+                    </div>
+                    <div class="card">
+                        <h3>百年校史</h3>
+                        <p>学校简介与历史发展的足迹。</p>
+                    </div>
                 </div>
-                <div class="card" style="margin-top:20px;"><h4>教职员赠言</h4><p>老师们的嘱托...</p></div>
             </section>
 
             <section id="graduates">
                 <h2>高三毕业生 (2026)</h2>
-                <p><strong>班训：</strong> 勇往直前</p>
                 <div class="card">
-                    <h4>班级简介与导师赠言</h4>
-                    <p>这里填入班导的话和班委名单。</p>
+                    <h4>班级简介 & 班导师赠言</h4>
+                    <p><strong>班训：</strong> [在此填入你们的班训]</p>
+                    <p>班委名单：主席、副主席、文书、财政...</p>
                 </div>
-                <div class="card" style="margin-top:20px;">
-                    <h4>通讯录（隐私加密建议）</h4>
-                    <p>中英姓名、照片、生日、联络号码、IG、地址。</p>
+                
+                <h3 style="margin-top:40px;">同学通讯录</h3>
+                <div style="overflow-x: auto;">
+                    <table class="contact-table">
+                        <thead>
+                            <tr>
+                                <th>中英姓名</th><th>学号</th><th>生日</th><th>IG/联络</th><th>住址</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>陈大文 Tan Tai Boon</td><td>210001</td><td>05-20</td><td>@davintan</td><td>Pahang, Malaysia</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </section>
 
             <section id="activities">
-                <h2>校园活动 (2021-2026)</h2>
+                <h2>校园活动 (2026)</h2>
                 <div class="grid">
-                    <div class="card">一日营</div>
-                    <div class="card">成年礼</div>
-                    <div class="card">运动会</div>
-                    <div class="card">义跑</div>
+                    <div class="card"><h4>一日营</h4><p>照片集占位...</p></div>
+                    <div class="card"><h4>成年礼</h4><p>照片集占位...</p></div>
+                    <div class="card"><h4>运动会 / 义跑</h4><p>照片集占位...</p></div>
                 </div>
             </section>
 
-            <section id="committee">
-                <h2>毕联会与感言</h2>
+            <section id="groups">
+                <h2>学校团体</h2>
                 <div class="grid">
-                    <div class="card">主席感言</div>
-                    <div class="card">主编感言</div>
-                    <div class="card">副主编感言</div>
+                    <div class="card"><h4>联课团体</h4><p>各个学会的合照与简介。</p></div>
+                    <div class="card"><h4>服务团体</h4><p>学长团、图书馆团等。</p></div>
+                </div>
+                <div class="card" style="margin-top:20px;"><h4>荣誉榜</h4><p>记录这一年大家获得的奖项。</p></div>
+            </section>
+
+            <section id="committee">
+                <h2>编委会感言</h2>
+                <div class="grid">
+                    <div class="card"><strong>主席：</strong> 感言内容...</div>
+                    <div class="card"><strong>主编：</strong> 感言内容...</div>
+                    <div class="card"><strong>各组部长：</strong> 全组简介...</div>
                 </div>
                 <div class="card" style="margin-top:20px;">
-                    <h4>芳名录与留言板</h4>
+                    <h3>留言板 / 芳名录</h3>
+                    <p>感谢广告赞助商及所有捐款人士。</p>
                 </div>
             </section>
         </div>
+
+        <footer>
+            <p>&copy; 2026 届毕联会 版权所有 | 齿轮·转向未来</p>
+        </footer>
     </main>
 
     <script>
         gsap.registerPlugin(ScrollTrigger);
 
-        // 封面转化动画
+        // 封面 ZA 转场动画
         const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: ".scroll-space",
                 start: "top top",
                 end: "bottom top",
-                scrub: 0.5,
+                scrub: 0.6,
             }
         });
 
-        tl.to("#gearIcon", { rotation: 360, ease: "none" }, 0)
-          .to("#hero", { scale: 15, opacity: 0, duration: 2 }, 0)
+        tl.to("#heroBg", { scale: 1.5, filter: "blur(15px)", opacity: 0, duration: 2 }, 0)
+          .to("#gearIcon", { rotation: 720, duration: 2 }, 0)
+          .to("#gearContainer", { scale: 20, opacity: 0, duration: 2, ease: "power2.in" }, 0)
           .set("#hero", { display: "none" });
 
-        // 章节浮现
+        // 章节随滚动平滑浮现
         gsap.utils.toArray("section").forEach(sec => {
             gsap.to(sec, {
-                opacity: 1, y: 0,
+                opacity: 1, y: 0, duration: 1,
                 scrollTrigger: {
                     trigger: sec,
                     start: "top 85%",
