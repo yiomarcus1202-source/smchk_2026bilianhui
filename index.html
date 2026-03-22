@@ -11,14 +11,17 @@
     <style>
         :root { --bg-dark: #000; --neon: #00f2ff; --school-red: #800000; }
         * { box-sizing: border-box; }
-        body { margin: 0; background: var(--bg-dark); color: #fff; font-family: sans-serif; overflow-x: hidden; }
+        body { margin: 0; background: var(--bg-dark); color: #fff; font-family: "PingFang SC", sans-serif; transition: background 0.5s; }
+        
+        /* 锁定滚动的状态 */
+        body.locked { overflow: hidden !important; }
 
-        /* 封面层 */
+        /* --- 封面层 --- */
         #intro-wrapper { width: 100%; position: relative; }
         .hero-section {
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            z-index: 100; background: #000; pointer-events: none;
+            z-index: 100; background: #000; pointer-events: none; overflow: hidden;
         }
         .hero-bg {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -26,26 +29,32 @@
                         url('bg.jpg') center/cover no-repeat;
             z-index: -1;
         }
-        #gearIcon { font-size: 8rem; text-shadow: 0 0 20px var(--neon); }
-        .hero-title { font-size: 3.5rem; margin: 15px 0; text-shadow: 0 0 15px var(--neon); font-weight: bold; text-align: center; }
-        .hero-subtitle { font-size: 1.5rem; color: var(--neon); }
+        #gearIcon { font-size: clamp(6rem, 20vw, 10rem); text-shadow: 0 0 20px var(--neon); will-change: transform; }
+        .hero-title { font-size: clamp(2.5rem, 10vw, 4rem); margin: 20px 0; text-shadow: 0 0 15px var(--neon); font-weight: bold; }
+        .hero-subtitle { font-size: 1.5rem; color: var(--neon); letter-spacing: 4px; }
 
-        .scroll-space { height: 200vh; }
+        /* 滚动空间：加长以防止误触滑过 */
+        .scroll-space { height: 350vh; }
 
-        /* --- 主内容区 --- */
+        /* --- 正文内容区 --- */
         .main-content {
             position: relative; z-index: 1; background: #fff; color: #333;
-            min-height: 100vh; visibility: hidden; opacity: 0; /* 初始完全不可见 */
-            transition: opacity 0.8s ease;
+            min-height: 100vh; visibility: hidden; opacity: 0;
+            transition: opacity 1s ease;
         }
 
-        .container { max-width: 1000px; margin: 0 auto; padding: 40px 20px; }
-        section { padding: 40px 0; border-bottom: 1px solid #eee; }
-        h2 { color: var(--school-red); border-left: 8px solid var(--school-red); padding-left: 15px; }
-        .card { background: #f9f9f9; padding: 25px; border-radius: 20px; border: 1px solid #eee; }
+        nav { position: sticky; top: 0; background: rgba(255,255,255,0.95); padding: 15px; display: flex; gap: 20px; overflow-x: auto; z-index: 200; border-bottom: 1px solid #eee; backdrop-filter: blur(5px); }
+        nav a { color: #333; text-decoration: none; font-weight: bold; white-space: nowrap; font-size: 0.9rem; }
+
+        .container { max-width: 1000px; margin: 0 auto; padding: 60px 20px; }
+        section { padding: 60px 0; border-bottom: 1px solid #eee; }
+        h2 { font-size: 2.2rem; color: var(--school-red); border-left: 10px solid var(--school-red); padding-left: 15px; margin-bottom: 30px; }
         
-        nav { position: sticky; top: 0; background: rgba(255,255,255,0.9); padding: 15px; display: flex; gap: 20px; overflow-x: auto; z-index: 10; border-bottom: 1px solid #ddd; }
-        nav a { color: #333; text-decoration: none; font-weight: bold; white-space: nowrap; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
+        .card { background: #fdfdfd; padding: 25px; border-radius: 20px; border: 1px solid #eee; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
+        
+        .contact-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .contact-table th, .contact-table td { padding: 12px; border: 1px solid #eee; text-align: left; }
     </style>
 </head>
 <body>
@@ -66,26 +75,68 @@
         <nav>
             <a href="#principals">长官致辞</a>
             <a href="#school">学校概况</a>
-            <a href="#graduates">毕业生名单</a>
+            <a href="#graduates">毕业生</a>
             <a href="#activities">校园活动</a>
+            <a href="#committee">编委会</a>
         </nav>
 
         <div class="container">
             <section id="principals">
                 <h2>致辞篇</h2>
-                <div class="card"><h3>董事长致辞</h3><p>在此填入文字...</p></div>
+                <div class="grid">
+                    <div class="card"><h3>董事长致辞</h3><p>在此填入文字内容...</p></div>
+                    <div class="card"><h3>校长致辞</h3><p>在此填入文字内容...</p></div>
+                    <div class="card"><h3>五大商会代表</h3><p>在此填入文字内容...</p></div>
+                </div>
             </section>
+
             <section id="school">
                 <h2>学校概况</h2>
-                <div class="card"><p>校歌、校旗、校史简介。</p></div>
+                <div class="card">
+                    <p><strong>精神堡垒：</strong>校徽意义、校歌、中华颂、创造奇迹、八大信条、校训。</p>
+                    <p><strong>百年校史：</strong>学校简介与发展历程。</p>
+                </div>
             </section>
+
             <section id="graduates">
-                <h2>毕业生名单</h2>
-                <div class="card"><p>同学们的联络方式与照片。</p></div>
+                <h2>高三毕业生 (2026)</h2>
+                <div class="card">
+                    <h4>班级简介与导师赠言</h4>
+                    <p>班导师：XXX 老师</p>
+                    <p>班委会：主席 XXX、文书 XXX...</p>
+                </div>
+                <h3>同学通讯录</h3>
+                <div style="overflow-x:auto;">
+                    <table class="contact-table">
+                        <thead>
+                            <tr><th>中英姓名</th><th>学号</th><th>生日</th><th>IG/联络</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>陈大文 Tan Ah Boon</td><td>210001</td><td>05-20</td><td>@ahboon_2026</td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </section>
+
             <section id="activities">
-                <h2>校园活动</h2>
-                <div class="card"><p>2021-2026 的点点滴滴。</p></div>
+                <h2>校园活动 2021-2026</h2>
+                <div class="grid">
+                    <div class="card"><h4>一日营</h4><p>照片及回顾...</p></div>
+                    <div class="card"><h4>成年礼</h4><p>照片及回顾...</p></div>
+                    <div class="card"><h4>运动会 / 义跑</h4><p>照片及回顾...</p></div>
+                </div>
+            </section>
+
+            <section id="committee">
+                <h2>编委会致谢</h2>
+                <div class="grid">
+                    <div class="card"><strong>主席感言</strong><p>...</p></div>
+                    <div class="card"><strong>主编感言</strong><p>...</p></div>
+                </div>
+                <div class="card" style="margin-top:20px;">
+                    <h4>芳名录</h4>
+                    <p>感谢所有广告赞助及捐款人士。</p>
+                </div>
             </section>
         </div>
     </main>
@@ -93,42 +144,48 @@
     <script>
         gsap.registerPlugin(ScrollTrigger);
 
-        // 封面转化动画
+        // 齿轮旋转 + 封面放大撞向屏幕
         const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: ".scroll-space",
                 start: "top top",
                 end: "bottom top",
-                scrub: 0.6,
-                onLeave: () => finalizeTransition() // 到底部离开时销毁封面
+                scrub: 1, // 增加阻尼感，防止滑太快
+                onLeave: () => finalizeTransition()
             }
         });
 
-        tl.to("#hero", { 
-            scale: 25, 
-            opacity: 0, 
-            duration: 2, 
-            ease: "power2.in" 
-        }, 0);
+        tl.to("#gearIcon", { rotation: 720, ease: "none" }, 0)
+          .to("#hero", { 
+              scale: 35, 
+              opacity: 0, 
+              duration: 2, 
+              ease: "power2.in" 
+          }, 0);
 
         function finalizeTransition() {
-            // 1. 显示内容区
             const main = document.getElementById('mainContent');
+            const intro = document.getElementById('intro-wrapper');
+
+            // 1. 瞬间锁定滚动
+            document.body.classList.add('locked');
+
+            // 2. 显示内容并变色
             main.style.visibility = 'visible';
             main.style.opacity = '1';
-
-            // 2. 彻底移除封面 HTML
-            const intro = document.getElementById('intro-wrapper');
-            if (intro) {
-                intro.remove(); 
-            }
-
-            // 3. 强制页面复位到最顶部
-            window.scrollTo(0, 0);
-
-            // 4. 重要：重置背景色并刷新滚动引擎
             document.body.style.background = "#fff";
-            ScrollTrigger.refresh(); // 告诉浏览器高度变了，重新计算所有位置
+
+            // 3. 彻底删除封面防止回滚
+            if (intro) intro.remove();
+
+            // 4. 重置到最顶端并刷新
+            window.scrollTo(0, 0);
+            
+            // 5. 延迟 0.5 秒解锁，确保用户“着陆”稳定
+            setTimeout(() => {
+                document.body.classList.remove('locked');
+                ScrollTrigger.refresh();
+            }, 500);
         }
     </script>
 </body>
