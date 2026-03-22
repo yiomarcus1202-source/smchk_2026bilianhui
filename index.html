@@ -9,71 +9,50 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     
     <style>
-        :root {
-            --bg-dark: #000;
-            --neon: #00f2ff;
-            --school-red: #800000;
-        }
-
+        :root { --bg-dark: #000; --neon: #00f2ff; --school-red: #800000; }
         * { box-sizing: border-box; }
-        body { margin: 0; background: var(--bg-dark); color: #fff; font-family: "PingFang SC", sans-serif; overflow-x: hidden; transition: background 0.5s; }
+        body { margin: 0; background: var(--bg-dark); color: #fff; font-family: sans-serif; overflow-x: hidden; }
 
-        /* --- 封面转场容器 --- */
-        #intro-wrapper { width: 100%; }
-
+        /* 封面层 */
+        #intro-wrapper { width: 100%; position: relative; }
         .hero-section {
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            z-index: 100; background: #000; pointer-events: none; overflow: hidden;
+            z-index: 100; background: #000; pointer-events: none;
         }
-
-        /* 背景大图：请确保有 bg.jpg 文件 */
         .hero-bg {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7)), 
                         url('bg.jpg') center/cover no-repeat;
             z-index: -1;
-            will-change: transform;
         }
-
         #gearIcon { font-size: 8rem; text-shadow: 0 0 20px var(--neon); }
         .hero-title { font-size: 3.5rem; margin: 15px 0; text-shadow: 0 0 15px var(--neon); font-weight: bold; text-align: center; }
-        .hero-subtitle { font-size: 1.5rem; color: var(--neon); letter-spacing: 2px; }
+        .hero-subtitle { font-size: 1.5rem; color: var(--neon); }
 
-        /* 滚动触发空间 */
-        .scroll-space { height: 250vh; }
+        .scroll-space { height: 200vh; }
 
-        /* --- 主内容区 (转场前隐藏) --- */
+        /* --- 主内容区 --- */
         .main-content {
-            position: relative; z-index: 50; background: #fff; color: #333;
-            min-height: 100vh; display: none; /* 初始完全隐藏 */
+            position: relative; z-index: 1; background: #fff; color: #333;
+            min-height: 100vh; visibility: hidden; opacity: 0; /* 初始完全不可见 */
+            transition: opacity 0.8s ease;
         }
 
-        nav {
-            position: sticky; top: 0; background: rgba(255,255,255,0.9);
-            backdrop-filter: blur(10px); padding: 15px; display: flex; 
-            gap: 20px; overflow-x: auto; z-index: 60; border-bottom: 1px solid #eee;
-        }
-        nav a { color: #333; text-decoration: none; font-weight: bold; white-space: nowrap; }
-
-        .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
-
-        /* 章节清单样式 */
-        section { padding: 60px 0; border-bottom: 1px solid #f0f0f0; }
-        h2 { font-size: 2rem; color: var(--school-red); border-left: 10px solid var(--school-red); padding-left: 15px; margin-bottom: 30px; }
-
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-        .card { background: #fafafa; padding: 25px; border-radius: 20px; border: 1px solid #eee; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 40px 20px; }
+        section { padding: 40px 0; border-bottom: 1px solid #eee; }
+        h2 { color: var(--school-red); border-left: 8px solid var(--school-red); padding-left: 15px; }
+        .card { background: #f9f9f9; padding: 25px; border-radius: 20px; border: 1px solid #eee; }
         
-        .contact-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        .contact-table th, .contact-table td { padding: 12px; border: 1px solid #ddd; text-align: left; }
+        nav { position: sticky; top: 0; background: rgba(255,255,255,0.9); padding: 15px; display: flex; gap: 20px; overflow-x: auto; z-index: 10; border-bottom: 1px solid #ddd; }
+        nav a { color: #333; text-decoration: none; font-weight: bold; white-space: nowrap; }
     </style>
 </head>
 <body>
 
     <div id="intro-wrapper">
         <div class="hero-section" id="hero">
-            <div class="hero-bg" id="heroBg"></div>
+            <div class="hero-bg"></div>
             <div id="gearContainer" style="text-align: center;">
                 <div id="gearIcon">⚙️</div>
                 <h1 class="hero-title">齿轮•转向未来</h1>
@@ -89,53 +68,24 @@
             <a href="#school">学校概况</a>
             <a href="#graduates">毕业生名单</a>
             <a href="#activities">校园活动</a>
-            <a href="#committee">编委会</a>
         </nav>
 
         <div class="container">
             <section id="principals">
                 <h2>致辞篇</h2>
-                <div class="grid">
-                    <div class="card"><h3>董事长致辞</h3><p>在此填入文字...</p></div>
-                    <div class="card"><h3>校长致辞</h3><p>在此填入文字...</p></div>
-                </div>
+                <div class="card"><h3>董事长致辞</h3><p>在此填入文字...</p></div>
             </section>
-
             <section id="school">
                 <h2>学校概况</h2>
-                <div class="card">
-                    <p><strong>校徽/校歌/校训：</strong> 校史简介与精神堡垒内容。</p>
-                </div>
+                <div class="card"><p>校歌、校旗、校史简介。</p></div>
             </section>
-
             <section id="graduates">
-                <h2>高三毕业生 (2026)</h2>
-                <div class="card">
-                    <p><strong>班训：</strong> 勇往直前</p>
-                    <p>班导师赠言及班委名单。</p>
-                </div>
-                <table class="contact-table">
-                    <thead>
-                        <tr><th>姓名</th><th>学号</th><th>IG/联络</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td>同学 A</td><td>210001</td><td>@student_a</td></tr>
-                    </tbody>
-                </table>
+                <h2>毕业生名单</h2>
+                <div class="card"><p>同学们的联络方式与照片。</p></div>
             </section>
-
             <section id="activities">
                 <h2>校园活动</h2>
-                <div class="grid">
-                    <div class="card">一日营</div>
-                    <div class="card">成年礼</div>
-                    <div class="card">运动会</div>
-                </div>
-            </section>
-
-            <section id="committee">
-                <h2>毕联会感言</h2>
-                <div class="card"><p>感谢所有参与制作的师生，未来再见。</p></div>
+                <div class="card"><p>2021-2026 的点点滴滴。</p></div>
             </section>
         </div>
     </main>
@@ -150,28 +100,24 @@
                 start: "top top",
                 end: "bottom top",
                 scrub: 0.6,
-                // 关键点：当拉到底部完成转场时执行销毁函数
-                onLeave: () => finalizeTransition()
+                onLeave: () => finalizeTransition() // 到底部离开时销毁封面
             }
         });
 
-        tl.to("#heroBg", { scale: 1.5, filter: "blur(15px)", opacity: 0, duration: 2 }, 0)
-          .to("#gearIcon", { rotation: 720, duration: 2 }, 0)
-          .to("#gearContainer", { 
-              scale: 20, 
-              opacity: 0, 
-              duration: 2, 
-              ease: "power2.in" 
-          }, 0);
+        tl.to("#hero", { 
+            scale: 25, 
+            opacity: 0, 
+            duration: 2, 
+            ease: "power2.in" 
+        }, 0);
 
-        // 销毁封面，显示内容，且无法回头
         function finalizeTransition() {
-            // 1. 显示内容区，背景变白
+            // 1. 显示内容区
             const main = document.getElementById('mainContent');
-            main.style.display = 'block';
-            document.body.style.background = "#fff";
+            main.style.visibility = 'visible';
+            main.style.opacity = '1';
 
-            // 2. 彻底移除封面 HTML，使其物理消失
+            // 2. 彻底移除封面 HTML
             const intro = document.getElementById('intro-wrapper');
             if (intro) {
                 intro.remove(); 
@@ -180,8 +126,9 @@
             // 3. 强制页面复位到最顶部
             window.scrollTo(0, 0);
 
-            // 4. 重启 ScrollTrigger 刷新（因为高度变了）
-            ScrollTrigger.refresh();
+            // 4. 重要：重置背景色并刷新滚动引擎
+            document.body.style.background = "#fff";
+            ScrollTrigger.refresh(); // 告诉浏览器高度变了，重新计算所有位置
         }
     </script>
 </body>
