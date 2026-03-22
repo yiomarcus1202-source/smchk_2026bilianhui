@@ -10,90 +10,85 @@
     
     <style>
         :root {
-            --bg: #000;
+            --bg-dark: #000;
             --neon: #00f2ff;
             --school-red: #800000;
-            --text-main: #333;
         }
 
         * { box-sizing: border-box; }
-        body { margin: 0; background: var(--bg); color: #fff; font-family: "PingFang SC", "Microsoft YaHei", sans-serif; overflow-x: hidden; }
+        body { margin: 0; background: var(--bg-dark); color: #fff; font-family: "PingFang SC", sans-serif; overflow-x: hidden; transition: background 0.5s; }
 
-        /* --- 封面转场层 --- */
+        /* --- 封面转场容器 --- */
+        #intro-wrapper { width: 100%; }
+
         .hero-section {
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             z-index: 100; background: #000; pointer-events: none; overflow: hidden;
-            will-change: transform, opacity;
         }
 
-        /* 背景图片：请确保文件夹内有 bg.jpg */
+        /* 背景大图：请确保有 bg.jpg 文件 */
         .hero-bg {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7)), 
                         url('bg.jpg') center/cover no-repeat;
             z-index: -1;
+            will-change: transform;
         }
 
-        #gearIcon { font-size: clamp(5rem, 15vw, 8rem); text-shadow: 0 0 20px var(--neon); }
-        .hero-title { font-size: clamp(2rem, 8vw, 3.5rem); margin: 15px 0; text-shadow: 0 0 15px var(--neon); font-weight: bold; text-align: center; }
-        .hero-subtitle { font-size: clamp(1rem, 4vw, 1.5rem); color: var(--neon); letter-spacing: 2px; }
+        #gearIcon { font-size: 8rem; text-shadow: 0 0 20px var(--neon); }
+        .hero-title { font-size: 3.5rem; margin: 15px 0; text-shadow: 0 0 15px var(--neon); font-weight: bold; text-align: center; }
+        .hero-subtitle { font-size: 1.5rem; color: var(--neon); letter-spacing: 2px; }
 
-        /* 滚动空间：控制转场速度 */
+        /* 滚动触发空间 */
         .scroll-space { height: 250vh; }
 
-        /* --- 主内容区 --- */
+        /* --- 主内容区 (转场前隐藏) --- */
         .main-content {
-            position: relative; z-index: 50; background: #fff; color: var(--text-main);
-            border-radius: 40px 40px 0 0; box-shadow: 0 -20px 50px rgba(0,0,0,0.5);
-            padding-bottom: 100px;
+            position: relative; z-index: 50; background: #fff; color: #333;
+            min-height: 100vh; display: none; /* 初始完全隐藏 */
         }
 
-        /* 导航栏 */
         nav {
             position: sticky; top: 0; background: rgba(255,255,255,0.9);
             backdrop-filter: blur(10px); padding: 15px; display: flex; 
             gap: 20px; overflow-x: auto; z-index: 60; border-bottom: 1px solid #eee;
         }
-        nav a { color: var(--text-main); text-decoration: none; font-weight: bold; white-space: nowrap; font-size: 0.9rem; }
-        nav a:hover { color: var(--school-red); }
+        nav a { color: #333; text-decoration: none; font-weight: bold; white-space: nowrap; }
 
         .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
 
-        /* 章节样式 */
-        section { padding: 80px 0; border-bottom: 1px solid #f0f0f0; opacity: 0; transform: translateY(30px); }
-        h2 { font-size: 2.2rem; color: var(--school-red); border-left: 10px solid var(--school-red); padding-left: 15px; margin-bottom: 40px; }
+        /* 章节清单样式 */
+        section { padding: 60px 0; border-bottom: 1px solid #f0f0f0; }
+        h2 { font-size: 2rem; color: var(--school-red); border-left: 10px solid var(--school-red); padding-left: 15px; margin-bottom: 30px; }
 
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
         .card { background: #fafafa; padding: 25px; border-radius: 20px; border: 1px solid #eee; }
         
         .contact-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        .contact-table th, .contact-table td { padding: 12px; border: 1px solid #ddd; text-align: left; font-size: 0.9rem; }
-        .contact-table th { background: #f5f5f5; }
-
-        footer { text-align: center; padding: 50px; color: #999; font-size: 0.8rem; }
+        .contact-table th, .contact-table td { padding: 12px; border: 1px solid #ddd; text-align: left; }
     </style>
 </head>
 <body>
 
-    <div class="hero-section" id="hero">
-        <div class="hero-bg" id="heroBg"></div>
-        <div id="gearContainer" style="text-align: center;">
-            <div id="gearIcon">⚙️</div>
-            <h1 class="hero-title">齿轮•转向未来</h1>
-            <div class="hero-subtitle">2026年毕联会</div>
+    <div id="intro-wrapper">
+        <div class="hero-section" id="hero">
+            <div class="hero-bg" id="heroBg"></div>
+            <div id="gearContainer" style="text-align: center;">
+                <div id="gearIcon">⚙️</div>
+                <h1 class="hero-title">齿轮•转向未来</h1>
+                <div class="hero-subtitle">2026年毕联会</div>
+            </div>
         </div>
+        <div class="scroll-space"></div>
     </div>
 
-    <div class="scroll-space"></div>
-
-    <main class="main-content">
+    <main class="main-content" id="mainContent">
         <nav>
             <a href="#principals">长官致辞</a>
             <a href="#school">学校概况</a>
-            <a href="#graduates">毕业生</a>
+            <a href="#graduates">毕业生名单</a>
             <a href="#activities">校园活动</a>
-            <a href="#groups">联课团体</a>
             <a href="#committee">编委会</a>
         </nav>
 
@@ -101,121 +96,93 @@
             <section id="principals">
                 <h2>致辞篇</h2>
                 <div class="grid">
-                    <div class="card"><h3>董事长致辞</h3><p>内容占位：在此处填入董事长给毕业生的勉励语...</p></div>
-                    <div class="card"><h3>校长致辞</h3><p>内容占位：在此处填入校长的话...</p></div>
-                    <div class="card"><h3>商会代表</h3><p>五大商会代表赠言...</p></div>
-                </div>
-                <div class="card" style="margin-top: 20px;">
-                    <h3>教职员赠言</h3>
-                    <p>老师们的心里话...</p>
+                    <div class="card"><h3>董事长致辞</h3><p>在此填入文字...</p></div>
+                    <div class="card"><h3>校长致辞</h3><p>在此填入文字...</p></div>
                 </div>
             </section>
 
             <section id="school">
                 <h2>学校概况</h2>
-                <div class="grid">
-                    <div class="card">
-                        <h3>精神堡垒</h3>
-                        <p>校徽、校歌、中华颂、创造奇迹、八大信条、校训。</p>
-                    </div>
-                    <div class="card">
-                        <h3>百年校史</h3>
-                        <p>学校简介与历史发展的足迹。</p>
-                    </div>
+                <div class="card">
+                    <p><strong>校徽/校歌/校训：</strong> 校史简介与精神堡垒内容。</p>
                 </div>
             </section>
 
             <section id="graduates">
                 <h2>高三毕业生 (2026)</h2>
                 <div class="card">
-                    <h4>班级简介 & 班导师赠言</h4>
-                    <p><strong>班训：</strong> [在此填入你们的班训]</p>
-                    <p>班委名单：主席、副主席、文书、财政...</p>
+                    <p><strong>班训：</strong> 勇往直前</p>
+                    <p>班导师赠言及班委名单。</p>
                 </div>
-                
-                <h3 style="margin-top:40px;">同学通讯录</h3>
-                <div style="overflow-x: auto;">
-                    <table class="contact-table">
-                        <thead>
-                            <tr>
-                                <th>中英姓名</th><th>学号</th><th>生日</th><th>IG/联络</th><th>住址</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>陈大文 Tan Tai Boon</td><td>210001</td><td>05-20</td><td>@davintan</td><td>Pahang, Malaysia</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <table class="contact-table">
+                    <thead>
+                        <tr><th>姓名</th><th>学号</th><th>IG/联络</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>同学 A</td><td>210001</td><td>@student_a</td></tr>
+                    </tbody>
+                </table>
             </section>
 
             <section id="activities">
-                <h2>校园活动 (2026)</h2>
+                <h2>校园活动</h2>
                 <div class="grid">
-                    <div class="card"><h4>一日营</h4><p>照片集占位...</p></div>
-                    <div class="card"><h4>成年礼</h4><p>照片集占位...</p></div>
-                    <div class="card"><h4>运动会 / 义跑</h4><p>照片集占位...</p></div>
+                    <div class="card">一日营</div>
+                    <div class="card">成年礼</div>
+                    <div class="card">运动会</div>
                 </div>
-            </section>
-
-            <section id="groups">
-                <h2>学校团体</h2>
-                <div class="grid">
-                    <div class="card"><h4>联课团体</h4><p>各个学会的合照与简介。</p></div>
-                    <div class="card"><h4>服务团体</h4><p>学长团、图书馆团等。</p></div>
-                </div>
-                <div class="card" style="margin-top:20px;"><h4>荣誉榜</h4><p>记录这一年大家获得的奖项。</p></div>
             </section>
 
             <section id="committee">
-                <h2>编委会感言</h2>
-                <div class="grid">
-                    <div class="card"><strong>主席：</strong> 感言内容...</div>
-                    <div class="card"><strong>主编：</strong> 感言内容...</div>
-                    <div class="card"><strong>各组部长：</strong> 全组简介...</div>
-                </div>
-                <div class="card" style="margin-top:20px;">
-                    <h3>留言板 / 芳名录</h3>
-                    <p>感谢广告赞助商及所有捐款人士。</p>
-                </div>
+                <h2>毕联会感言</h2>
+                <div class="card"><p>感谢所有参与制作的师生，未来再见。</p></div>
             </section>
         </div>
-
-        <footer>
-            <p>&copy; 2026 届毕联会 版权所有 | 齿轮·转向未来</p>
-        </footer>
     </main>
 
     <script>
         gsap.registerPlugin(ScrollTrigger);
 
-        // 封面 ZA 转场动画
+        // 封面转化动画
         const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: ".scroll-space",
                 start: "top top",
                 end: "bottom top",
                 scrub: 0.6,
+                // 关键点：当拉到底部完成转场时执行销毁函数
+                onLeave: () => finalizeTransition()
             }
         });
 
         tl.to("#heroBg", { scale: 1.5, filter: "blur(15px)", opacity: 0, duration: 2 }, 0)
           .to("#gearIcon", { rotation: 720, duration: 2 }, 0)
-          .to("#gearContainer", { scale: 20, opacity: 0, duration: 2, ease: "power2.in" }, 0)
-          .set("#hero", { display: "none" });
+          .to("#gearContainer", { 
+              scale: 20, 
+              opacity: 0, 
+              duration: 2, 
+              ease: "power2.in" 
+          }, 0);
 
-        // 章节随滚动平滑浮现
-        gsap.utils.toArray("section").forEach(sec => {
-            gsap.to(sec, {
-                opacity: 1, y: 0, duration: 1,
-                scrollTrigger: {
-                    trigger: sec,
-                    start: "top 85%",
-                    toggleActions: "play none none reverse"
-                }
-            });
-        });
+        // 销毁封面，显示内容，且无法回头
+        function finalizeTransition() {
+            // 1. 显示内容区，背景变白
+            const main = document.getElementById('mainContent');
+            main.style.display = 'block';
+            document.body.style.background = "#fff";
+
+            // 2. 彻底移除封面 HTML，使其物理消失
+            const intro = document.getElementById('intro-wrapper');
+            if (intro) {
+                intro.remove(); 
+            }
+
+            // 3. 强制页面复位到最顶部
+            window.scrollTo(0, 0);
+
+            // 4. 重启 ScrollTrigger 刷新（因为高度变了）
+            ScrollTrigger.refresh();
+        }
     </script>
 </body>
 </html>
