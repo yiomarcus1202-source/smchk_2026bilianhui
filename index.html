@@ -9,63 +9,50 @@
     <style>
         :root { --bg-dark: #000; --neon: #00f2ff; --school-red: #800000; }
         
-        /* 强制初始状态为黑，防止白闪 */
-        html, body { margin: 0; padding: 0; background-color: #000; overflow-x: hidden; width: 100%; }
+        /* 初始背景黑色 */
+        html, body { margin: 0; padding: 0; background-color: #000; width: 100%; font-family: sans-serif; }
         
-        body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; }
-        body.locked { overflow: hidden !important; }
-
-        /* --- 封面转场层：确保最高级 --- */
-        #intro-wrapper { width: 100%; position: relative; z-index: 9999; }
-        
+        /* --- 封面层 (z-index 极高) --- */
+        #intro-wrapper { width: 100%; position: relative; z-index: 999; }
         .hero-section {
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            background: #000; /* 纯黑底色 */
-            pointer-events: none;
-            overflow: hidden;
+            background: #000; pointer-events: none; overflow: hidden;
         }
-
-        /* 修复背景：确保背景图层级正确 */
         .hero-bg {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle, rgba(0, 242, 255, 0.15) 0%, #000 70%), 
+            background: radial-gradient(circle, rgba(0, 242, 255, 0.1) 0%, #000 80%), 
                         url('bg.jpg') center/cover no-repeat;
             z-index: -1;
-            opacity: 1;
         }
-
-        /* 强化齿轮光影：增加外发光 */
+        /* 齿轮光影 */
         #gearIcon { 
-            font-size: 8rem; 
-            color: #fff;
-            text-shadow: 
-                0 0 15px var(--neon),
-                0 0 40px var(--neon),
-                0 0 70px rgba(0, 242, 255, 0.8);
+            font-size: 8rem; color: #fff;
+            text-shadow: 0 0 15px var(--neon), 0 0 40px var(--neon);
             filter: drop-shadow(0 0 10px var(--neon));
             will-change: transform;
         }
+        .hero-title { font-size: 3rem; margin: 20px 0; text-shadow: 0 0 15px var(--neon); color: #fff; text-align: center; }
+        .hero-subtitle { font-size: 1.2rem; color: var(--neon); letter-spacing: 5px; }
 
-        .hero-title { font-size: 3.5rem; margin: 20px 0; text-shadow: 0 0 15px var(--neon); font-weight: bold; color: #fff; }
-        .hero-subtitle { font-size: 1.5rem; color: var(--neon); letter-spacing: 5px; }
-
-        /* 滚动空间 */
         .scroll-space { height: 350vh; background: transparent; }
 
-        /* --- 主内容区 --- */
-        .main-content {
+        /* --- 主内容区 (转场前不可见但占位) --- */
+        #mainContent {
             position: relative; z-index: 10; background: #fff; color: #333;
-            min-height: 100vh; display: none; /* 初始彻底隐藏，防止干扰渲染 */
+            min-height: 100vh; opacity: 0; visibility: hidden;
+            transition: opacity 0.5s ease;
         }
 
-        .container { max-width: 1000px; margin: 0 auto; padding: 60px 20px; }
-        section { padding: 40px 0; border-bottom: 1px solid #eee; }
-        h2 { font-size: 2rem; color: var(--school-red); border-left: 8px solid var(--school-red); padding-left: 15px; }
-        .card { background: #fdfdfd; padding: 25px; border-radius: 20px; border: 1px solid #eee; margin-top: 15px; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 40px 20px; }
+        nav { position: sticky; top: 0; background: #fff; padding: 15px; display: flex; gap: 20px; border-bottom: 1px solid #ddd; z-index: 100; overflow-x: auto; }
+        nav a { color: #333; text-decoration: none; font-weight: bold; white-space: nowrap; }
         
-        nav { position: sticky; top: 0; background: rgba(255,255,255,0.95); padding: 15px; display: flex; gap: 20px; z-index: 100; border-bottom: 1px solid #ddd; backdrop-filter: blur(5px); }
-        nav a { color: #333; text-decoration: none; font-weight: bold; }
+        section { padding: 50px 0; border-bottom: 1px solid #eee; }
+        h2 { color: var(--school-red); border-left: 8px solid var(--school-red); padding-left: 15px; }
+        .card { background: #f9f9f9; padding: 20px; border-radius: 15px; border: 1px solid #eee; margin-top: 15px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
     </style>
 </head>
 <body>
@@ -82,40 +69,54 @@
         <div class="scroll-space"></div>
     </div>
 
-    <main class="main-content" id="mainContent">
+    <main id="mainContent">
         <nav>
-            <a href="#principals">致辞篇</a>
+            <a href="#principals">长官致辞</a>
             <a href="#school">学校概况</a>
             <a href="#graduates">毕业生名单</a>
             <a href="#activities">校园活动</a>
-            <a href="#committee">编委会</a>
+            <a href="#committee">编委会/致谢</a>
         </nav>
 
         <div class="container">
             <section id="principals">
-                <h2>致辞篇</h2>
-                <div class="card"><h3>董事长致辞</h3><p>内容占位：在此输入董事长寄语...</p></div>
-                <div class="card"><h3>校长致辞</h3><p>内容占位：在此输入校长寄语...</p></div>
+                <h2>长官致辞篇</h2>
+                <div class="card"><h3>董事长致辞</h3><p>在此填入内容...</p></div>
+                <div class="card"><h3>校长致辞</h3><p>在此填入内容...</p></div>
+                <div class="card"><h3>五大商会代表 / 教职员赠言</h3><p>在此填入内容...</p></div>
             </section>
             
             <section id="school">
-                <h2>学校精神与概况</h2>
-                <div class="card"><p>校歌、校史、校训、创造奇迹、中华颂、八大信条。</p></div>
+                <h2>学校概况</h2>
+                <div class="card">
+                    <p><strong>内容：</strong>校歌、校旗、校徽、校训、创造奇迹、中华颂、八大信条、百年校史简介。</p>
+                </div>
             </section>
 
             <section id="graduates">
                 <h2>高三毕业生名单 (2026)</h2>
-                <div class="card"><p>高三毕业班级及导师赠言。表格填入处...</p></div>
+                <div class="card">
+                    <p>班导师赠言、班委会名单、班训。</p>
+                    <h3>同学通讯录</h3>
+                    <table>
+                        <thead><tr><th>姓名</th><th>学号</th><th>生日</th><th>联络</th></tr></thead>
+                        <tbody><tr><td>同学姓名</td><td>210001</td><td>01-01</td><td>@ig_account</td></tr></tbody>
+                    </table>
+                </div>
             </section>
 
             <section id="activities">
                 <h2>校园活动回顾</h2>
-                <div class="card"><p>2021-2026 校园生活点滴。</p></div>
+                <div class="card">
+                    <p>一日营、成年礼、运动会/义跑、联课/服务团体合照。</p>
+                </div>
             </section>
 
             <section id="committee">
-                <h2>编委会致谢</h2>
-                <div class="card"><p>2026 毕联会全体成员致谢。毕业快乐！</p></div>
+                <h2>编委会感言与致谢</h2>
+                <div class="card">
+                    <p>毕联会感言、芳名录（广告/捐款人士）。</p>
+                </div>
             </section>
         </div>
     </main>
@@ -123,57 +124,35 @@
     <script>
         gsap.registerPlugin(ScrollTrigger);
 
-        // 初始化：确保一开始就能看到封面
-        window.onload = () => {
-            gsap.set("#hero", { opacity: 1 });
-        };
-
-        // 动画逻辑：旋转 + 放大 同步进行
+        // 动画：同步旋转 + 放大
         const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: ".scroll-space",
                 start: "top top",
                 end: "bottom top",
-                scrub: 1, 
+                scrub: 1,
                 onLeave: () => finalizeTransition()
             }
         });
 
-        // 齿轮自转
-        tl.to("#gearIcon", { 
-            rotation: 1440, 
-            ease: "none"
-        }, 0);
-
-        // 整个容器同步放大并消失
-        tl.to("#hero", { 
-            scale: 60, 
-            opacity: 0, 
-            duration: 3,
-            ease: "power2.inOut" 
-        }, 0);
+        tl.to("#gearIcon", { rotation: 1440, ease: "none" }, 0)
+          .to("#hero", { scale: 60, opacity: 0, ease: "power2.inOut" }, 0);
 
         function finalizeTransition() {
             const main = document.getElementById('mainContent');
             const intro = document.getElementById('intro-wrapper');
 
-            // 1. 瞬间解锁白色页面
-            main.style.display = 'block';
+            // 1. 先让内容可见
+            main.style.visibility = 'visible';
+            main.style.opacity = '1';
             document.body.style.backgroundColor = "#fff";
 
-            // 2. 物理删除封面，防止遮挡
-            if (intro) {
-                intro.parentNode.removeChild(intro);
-            }
+            // 2. 移除封面
+            if (intro) intro.remove();
 
-            // 3. 页面瞬间回到顶部
+            // 3. 强制回到顶部并刷新
             window.scrollTo(0, 0);
-
-            // 4. 强制重置滚动锁，刷新引擎
-            document.body.style.overflow = "auto";
             ScrollTrigger.refresh();
-            
-            console.log("转向未来：转场成功完成");
         }
     </script>
 </body>
