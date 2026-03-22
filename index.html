@@ -4,12 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>2026毕业刊 | 齿轮•转向未来</title>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
     <style>
         :root { --bg-dark: #000; --neon: #00f2ff; --school-red: #800000; }
-        * { box-sizing: border-box; scroll-behavior: smooth; }
-        body { margin: 0; background: var(--bg-dark); color: #fff; font-family: "PingFang SC", sans-serif; }
+        * { box-sizing: border-box; }
+        body { margin: 0; background: var(--bg-dark); color: #fff; font-family: "PingFang SC", "Microsoft YaHei", sans-serif; overflow-x: hidden; transition: background 0.5s; }
+        
+        /* 锁定滚动的状态 */
         body.locked { overflow: hidden !important; }
 
         /* --- 封面转场层 --- */
@@ -19,37 +23,47 @@
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             z-index: 100; background: #000; pointer-events: none; overflow: hidden;
         }
+
+        /* 背景图片：请确保文件夹内有 bg.jpg */
         .hero-bg {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7)), 
                         url('bg.jpg') center/cover no-repeat;
             z-index: -1;
+            will-change: transform;
         }
-        #gearIcon { font-size: 8rem; text-shadow: 0 0 20px var(--neon); will-change: transform; }
-        .hero-title { font-size: 3.5rem; margin: 15px 0; text-shadow: 0 0 15px var(--neon); font-weight: bold; text-align: center; }
+
+        /* 齿轮图标：加大初始尺寸，增加 will-change 优化性能 */
+        #gearIcon { font-size: clamp(6rem, 18vw, 9rem); text-shadow: 0 0 20px var(--neon); will-change: transform; }
+        
+        .hero-title { font-size: clamp(2.5rem, 9vw, 3.8rem); margin: 20px 0; text-shadow: 0 0 15px var(--neon); font-weight: bold; text-align: center; }
         .hero-subtitle { font-size: 1.5rem; color: var(--neon); letter-spacing: 4px; }
 
-        .scroll-space { height: 450vh; } /* 极长的滚动空间，确保转场细腻 */
+        /* 滚动空间：加长滚动路径，让转场细腻平滑 */
+        .scroll-space { height: 400vh; }
 
-        /* --- 主内容区 --- */
+        /* --- 正文内容区 --- */
         .main-content {
             position: relative; z-index: 1; background: #fff; color: #333;
             min-height: 100vh; visibility: hidden; opacity: 0;
             transition: opacity 1.2s ease;
         }
 
+        /* 导航栏 */
         nav { position: sticky; top: 0; background: rgba(255,255,255,0.95); padding: 15px; display: flex; gap: 20px; overflow-x: auto; z-index: 200; border-bottom: 1px solid #eee; backdrop-filter: blur(5px); }
         nav a { color: #333; text-decoration: none; font-weight: bold; white-space: nowrap; font-size: 0.9rem; }
 
-        .container { max-width: 1000px; margin: 0 auto; padding: 40px 20px; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 60px 20px; }
         section { padding: 60px 0; border-bottom: 1px solid #eee; }
         h2 { font-size: 2.2rem; color: var(--school-red); border-left: 10px solid var(--school-red); padding-left: 15px; margin-bottom: 30px; }
         
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+        /* 列表排版 */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
         .card { background: #fdfdfd; padding: 25px; border-radius: 20px; border: 1px solid #eee; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
         
+        /* 通讯录表格 */
         .contact-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        .contact-table th, .contact-table td { padding: 12px; border: 1px solid #eee; text-align: left; font-size: 0.9rem; }
+        .contact-table th, .contact-table td { padding: 12px; border: 1px solid #eee; text-align: left; }
         .contact-table th { background: #f8f8f8; }
     </style>
 </head>
@@ -57,7 +71,7 @@
 
     <div id="intro-wrapper">
         <div class="hero-section" id="hero">
-            <div class="hero-bg"></div>
+            <div class="hero-bg" id="heroBg"></div>
             <div id="gearContainer" style="text-align: center;">
                 <div id="gearIcon">⚙️</div>
                 <h1 class="hero-title">齿轮•转向未来</h1>
@@ -80,9 +94,13 @@
             <section id="principals">
                 <h2>长官致辞篇</h2>
                 <div class="grid">
-                    <div class="card"><h3>董事长致辞</h3><p>内容：在此处录入董事长给毕业生的勉励语...</p></div>
-                    <div class="card"><h3>校长致辞</h3><p>内容：在此处录入校长对 2026 届学生的寄语...</p></div>
-                    <div class="card"><h3>教职员赠言</h3><p>在此填入老师们集体对学生的祝福...</p></div>
+                    <div class="card"><h3>董事长致辞</h3><p>内容占位：在此处填入董事长给毕业生的勉励语...</p></div>
+                    <div class="card"><h3>校长致辞</h3><p>内容占位：在此处填入校长对 2026 届学生的寄语...</p></div>
+                    <div class="card"><h3>五大商会代表</h3><p>在此填入代表们的赠言...</p></div>
+                </div>
+                <div class="card" style="margin-top:20px;">
+                    <h3>教职员赠言</h3>
+                    <p>来自老师们集体对学生的祝福...</p>
                 </div>
             </section>
 
@@ -91,7 +109,7 @@
                 <div class="grid">
                     <div class="card">
                         <h3>精神堡垒</h3>
-                        <p>校歌、校旗、校徽、校训、创造奇迹、中华颂、八大信条。</p>
+                        <p>校歌、校旗、校徽意义、校训、创造奇迹、中华颂、八大信条。</p>
                     </div>
                     <div class="card">
                         <h3>百年校史</h3>
@@ -103,10 +121,11 @@
             <section id="graduates">
                 <h2>高三毕业生 (2026)</h2>
                 <div class="card">
-                    <h4>班级简介与导师赠言</h4>
-                    <p><strong>班训：</strong> [填入你们的班级口号]</p>
+                    <h4>班级简介 & 班导师赠言</h4>
                     <p>班导师：XXX 老师 | 班委：主席、副主席、财政...</p>
+                    <p><strong>班训：</strong> [在此填入你们的班级口号]</p>
                 </div>
+                
                 <h3 style="margin-top:30px;">同学通讯录</h3>
                 <div style="overflow-x:auto;">
                     <table class="contact-table">
@@ -114,34 +133,33 @@
                             <tr><th>中英姓名</th><th>学号</th><th>生日</th><th>IG / 联络</th><th>居住地区</th></tr>
                         </thead>
                         <tbody>
-                            <tr><td>王小明 Wang Xiao Ming</td><td>210001</td><td>05-20</td><td>@xiaoming_2026</td><td>Pahang</td></tr>
-                            </tbody>
+                            <tr><td>陈大文 Tan Ah Boon</td><td>210001</td><td>05-20</td><td>@ahboon_2026</td><td>Pahang</td></tr>
+                            <tr><td>李梅 Mei Lee</td><td>210002</td><td>11-15</td><td>@mei_2026</td><td>Selangor</td></tr>
+                        </tbody>
                     </table>
                 </div>
             </section>
 
             <section id="activities">
-                <h2>校园生活 (2021-2026)</h2>
+                <h2>校园生活 2021-2026</h2>
                 <div class="grid">
                     <div class="card"><h4>一日营</h4><p>记录那次难忘的集体生活...</p></div>
-                    <div class="card"><h4>成年礼</h4><p>我们跨过成年之门的照片集...</p></div>
-                    <div class="card"><h4>运动会与义跑</h4><p>汗水与荣耀的时刻...</p></div>
+                    <div class="card"><h4>成年礼</h4><p>跨过成年之门的照片集...</p></div>
+                    <div class="card"><h4>运动会与义跑</h4><p>땀水与荣耀的时刻...</p></div>
                 </div>
-                <div class="card" style="margin-top:20px;">
-                    <h3>联课与服务团体</h3>
-                    <p>各学会、制服团体的合照及荣誉榜。</p>
-                </div>
+                <div class="card" style="margin-top:20px;"><h3>联课与服务团体</h3><p>各学会、制服团体的合照及荣誉榜。</p></div>
             </section>
 
             <section id="committee">
-                <h2>编委会与感言</h2>
+                <h2>编委会 致谢</h2>
                 <div class="grid">
-                    <div class="card"><strong>主席/主编感言</strong><p>完成这本毕业刊的心路历程...</p></div>
-                    <div class="card"><strong>芳名录</strong><p>鸣谢广告赞助商及社会热心人士...</p></div>
+                    <div class="card"><strong>主席感言</strong><p>完成这本毕业刊的心路历程...</p></div>
+                    <div class="card"><strong>主编感言</strong><p>...</p></div>
+                    <div class="card"><strong>各部长感言</strong><p>各组员简介与致谢。</p></div>
                 </div>
                 <div class="card" style="margin-top:20px;">
-                    <h4>留言板</h4>
-                    <p>毕业不是终点，而是齿轮转向未来的新起点。</p>
+                    <h3>芳名录</h3>
+                    <p>感谢广告赞助商及社会热心人士的捐款。</p>
                 </div>
             </section>
         </div>
@@ -155,42 +173,49 @@
                 trigger: ".scroll-space",
                 start: "top top",
                 end: "bottom top",
-                scrub: 1.2,
+                scrub: 1.2, // 增加平滑度，更有手感
                 onLeave: () => finalizeTransition()
             }
         });
 
-        // 齿轮动画：让它疯狂旋转 2160 度（6圈），且贯穿整个过程
+        // --- 究极修改方案：旋转 + 缩放同时进行 ---
+        
+        // 1. 让齿轮疯狂旋转 1800 度（5圈），且贯穿整个过程
         tl.to("#gearIcon", { 
-            rotation: 2160, 
+            rotation: 1800, 
             ease: "none", 
-            duration: 5 
+            duration: 5 // 设一个较长的时间
         }, 0)
-        // 缩放动画：让它在中后期加速撞向屏幕
+        // 2. 同时让整个容器加速缩放，并在中段消失
         .to("#hero", { 
-            scale: 60, 
+            scale: 50, 
             opacity: 0, 
             ease: "power2.in", 
             duration: 3 
-        }, 1.5);
+        }, 1.5); // 在转动的中段就开始衔接放大动画
 
         function finalizeTransition() {
             const main = document.getElementById('mainContent');
             const intro = document.getElementById('intro-wrapper');
 
+            // 1. 瞬间锁定滚动
             document.body.classList.add('locked');
+
+            // 2. 显示内容区并改变背景
             main.style.visibility = 'visible';
             main.style.opacity = '1';
             document.body.style.background = "#fff";
 
+            // 3. 彻底删除封面防止回滚
             if (intro) intro.remove();
 
+            // 4. 重置到顶部并解锁滚动
             window.scrollTo(0, 0);
             
             setTimeout(() => {
                 document.body.classList.remove('locked');
                 ScrollTrigger.refresh();
-            }, 800); 
+            }, 600); // 稍微长一点的锁定时间，确保着陆稳当
         }
     </script>
 </body>
