@@ -9,53 +9,75 @@
     <style>
         :root { --bg-dark: #000; --neon: #00f2ff; --school-red: #800000; }
         
-        /* 初始背景黑色 */
-        html, body { margin: 0; padding: 0; background-color: #000; width: 100%; font-family: sans-serif; }
-        
-        /* --- 封面层 (z-index 极高) --- */
-        #intro-wrapper { width: 100%; position: relative; z-index: 999; }
-        .hero-section {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            background: #000; pointer-events: none; overflow: hidden;
+        html, body { margin: 0; padding: 0; background-color: #000; width: 100%; font-family: "PingFang SC", sans-serif; }
+        body { overflow-x: hidden; }
+
+        /* --- 1. 齿轮封面层 --- */
+        #intro-wrapper { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 9999; 
+            background: #000; overflow: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
         }
+        .hero-section { width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; }
         .hero-bg {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle, rgba(0, 242, 255, 0.1) 0%, #000 80%), 
-                        url('bg.jpg') center/cover no-repeat;
+            background: radial-gradient(circle, rgba(0, 242, 255, 0.15) 0%, #000 80%), url('bg.jpg') center/cover no-repeat;
             z-index: -1;
         }
-        /* 齿轮光影 */
-        #gearIcon { 
-            font-size: 8rem; color: #fff;
-            text-shadow: 0 0 15px var(--neon), 0 0 40px var(--neon);
-            filter: drop-shadow(0 0 10px var(--neon));
-            will-change: transform;
-        }
+        #gearIcon { font-size: 8rem; color: #fff; text-shadow: 0 0 15px var(--neon), 0 0 40px var(--neon); will-change: transform; }
         .hero-title { font-size: 3rem; margin: 20px 0; text-shadow: 0 0 15px var(--neon); color: #fff; text-align: center; }
         .hero-subtitle { font-size: 1.2rem; color: var(--neon); letter-spacing: 5px; }
+        .scroll-trigger-space { height: 150vh; background: transparent; pointer-events: none; }
 
-        .scroll-space { height: 350vh; background: transparent; }
-
-        /* --- 主内容区 (转场前不可见但占位) --- */
-        #mainContent {
-            position: relative; z-index: 10; background: #fff; color: #333;
-            min-height: 100vh; opacity: 0; visibility: hidden;
-            transition: opacity 0.5s ease;
-        }
-
-        .container { max-width: 1000px; margin: 0 auto; padding: 40px 20px; }
-        nav { position: sticky; top: 0; background: #fff; padding: 15px; display: flex; gap: 20px; border-bottom: 1px solid #ddd; z-index: 100; overflow-x: auto; }
-        nav a { color: #333; text-decoration: none; font-weight: bold; white-space: nowrap; }
+        /* --- 2. 主目录区（大照片一屏接一屏） --- */
+        #mainContent { width: 100%; position: relative; z-index: 10; margin-top: -150vh; }
+        .full-page-section { width: 100%; height: 100vh; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
         
-        section { padding: 50px 0; border-bottom: 1px solid #eee; }
-        h2 { color: var(--school-red); border-left: 8px solid var(--school-red); padding-left: 15px; }
-        .card { background: #f9f9f9; padding: 20px; border-radius: 15px; border: 1px solid #eee; margin-top: 15px; }
+        .section-bg-pic {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-size: cover; background-position: center; z-index: 1;
+            background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.6));
+            transition: transform 0.6s ease;
+        }
+        .full-page-section:hover .section-bg-pic { transform: scale(1.03); }
+
+        .menu-trigger-card {
+            position: relative; z-index: 5; text-align: center; color: #fff;
+            background: rgba(0, 0, 0, 0.5); padding: 40px 60px; border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2); backdrop-filter: blur(8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+        .menu-trigger-card h2 { font-size: 2.8rem; margin: 0 0 15px 0; text-shadow: 0 2px 10px rgba(0,0,0,0.8); letter-spacing: 2px; }
+        .menu-trigger-card p { font-size: 1rem; color: #ddd; margin-bottom: 30px; }
+        .enter-btn {
+            background: var(--school-red); color: white; border: none; padding: 14px 36px;
+            font-size: 1.1rem; font-weight: bold; border-radius: 30px; cursor: pointer;
+            box-shadow: 0 5px 15px rgba(128, 0, 0, 0.4); transition: all 0.3s ease;
+        }
+        .enter-btn:hover { background: #a00000; transform: scale(1.08); }
+
+        /* --- 3. 真实独立的全屏详情画面 --- */
+        .fullscreen-detail-page {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #fff; color: #333; z-index: 99999;
+            opacity: 0; visibility: hidden; transition: all 0.4s ease;
+            transform: scale(0.95); overflow-y: auto;
+        }
+        .fullscreen-detail-page.active { opacity: 1; visibility: visible; transform: scale(1); }
+        .detail-container { max-width: 850px; margin: 0 auto; padding: 60px 20px; }
+        .detail-container h1 { font-size: 2.5rem; color: var(--school-red); border-left: 10px solid var(--school-red); padding-left: 20px; margin-bottom: 35px; }
+        .info-card { background: #f8f9fa; padding: 25px; border-radius: 16px; border: 1px solid #eee; margin-top: 20px; }
+        .info-card h3 { margin-top: 0; border-bottom: 1px solid #ddd; padding-bottom: 10px; }
+        .back-btn { background: #333; color: #fff; border: none; padding: 12px 25px; font-weight: bold; border-radius: 8px; cursor: pointer; margin-bottom: 30px; }
+
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
         th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background: #eee; }
     </style>
 </head>
 <body>
+
+    <div class="scroll-trigger-space"></div>
 
     <div id="intro-wrapper">
         <div class="hero-section" id="hero">
@@ -66,94 +88,160 @@
                 <div class="hero-subtitle">CLASS OF 2026</div>
             </div>
         </div>
-        <div class="scroll-space"></div>
     </div>
 
     <main id="mainContent">
-        <nav>
-            <a href="#principals">长官致辞</a>
-            <a href="#school">学校概况</a>
-            <a href="#graduates">毕业生名单</a>
-            <a href="#activities">校园活动</a>
-            <a href="#committee">编委会/致谢</a>
-        </nav>
+        
+        <section class="full-page-section">
+            <div class="section-bg-pic" style="background-image: url('zhici.jpg'); background-color: #2c3e50;"></div>
+            <div class="menu-trigger-card">
+                <h2>献词</h2>
+                <p>Congratulatory Messages</p>
+                <button class="enter-btn" onclick="goToPage('page-principals')">点击进入详情 ➔</button>
+            </div>
+        </section>
 
-        <div class="container">
-            <section id="principals">
-                <h2>长官致辞篇</h2>
-                <div class="card"><h3>董事长致辞</h3><p>在此填入内容...</p></div>
-                <div class="card"><h3>校长致辞</h3><p>在此填入内容...</p></div>
-                <div class="card"><h3>五大商会代表 / 教职员赠言</h3><p>在此填入内容...</p></div>
-            </section>
-            
-            <section id="school">
-                <h2>学校概况</h2>
-                <div class="card">
-                    <p><strong>内容：</strong>校歌、校旗、校徽、校训、创造奇迹、中华颂、八大信条、百年校史简介。</p>
-                </div>
-            </section>
+        <section class="full-page-section">
+            <div class="section-bg-pic" style="background-image: url('school.jpg'); background-color: #34495e;"></div>
+            <div class="menu-trigger-card">
+                <h2>学校简介</h2>
+                <p>About Our School</p>
+                <button class="enter-btn" onclick="goToPage('page-school')">点击进入详情 ➔</button>
+            </div>
+        </section>
 
-            <section id="graduates">
-                <h2>高三毕业生名单 (2026)</h2>
-                <div class="card">
-                    <p>班导师赠言、班委会名单、班训。</p>
-                    <h3>同学通讯录</h3>
-                    <table>
-                        <thead><tr><th>姓名</th><th>学号</th><th>生日</th><th>联络</th></tr></thead>
-                        <tbody><tr><td>同学姓名</td><td>210001</td><td>01-01</td><td>@ig_account</td></tr></tbody>
-                    </table>
-                </div>
-            </section>
+        <section class="full-page-section">
+            <div class="section-bg-pic" style="background-image: url('teachers.jpg'); background-color: #2c3e50;"></div>
+            <div class="menu-trigger-card">
+                <h2>教职员献词</h2>
+                <p>Messages from Faculty & Staff</p>
+                <button class="enter-btn" onclick="goToPage('page-teachers')">点击进入详情 ➔</button>
+            </div>
+        </section>
 
-            <section id="activities">
+        <section class="full-page-section">
+            <div class="section-bg-pic" style="background-image: url('class.jpg'); background-color: #16a085;"></div>
+            <div class="menu-trigger-card">
+                <h2>高三毕业生名单</h2>
+                <div class="hero-subtitle" style="font-size:0.9rem; margin-bottom:15px;">CLASS OF 2026</div>
+                <button class="enter-btn" onclick="goToPage('page-graduates')">点击进入详情 ➔</button>
+            </div>
+        </section>
+
+        <section class="full-page-section">
+            <div class="section-bg-pic" style="background-image: url('activity.jpg'); background-color: #2980b9;"></div>
+            <div class="menu-trigger-card">
                 <h2>校园活动回顾</h2>
-                <div class="card">
-                    <p>一日营、成年礼、运动会/义跑、联课/服务团体合照。</p>
-                </div>
-            </section>
+                <p>Memorable School Activities</p>
+                <button class="enter-btn" onclick="goToPage('page-activities')">点击进入详情 ➔</button>
+            </div>
+        </section>
 
-            <section id="committee">
-                <h2>编委会感言与致谢</h2>
-                <div class="card">
-                    <p>毕联会感言、芳名录（广告/捐款人士）。</p>
-                </div>
-            </section>
-        </div>
+        <section class="full-page-section">
+            <div class="section-bg-pic" style="background-image: url('committee.jpg'); background-color: #8e44ad;"></div>
+            <div class="menu-trigger-card">
+                <h2>编委会致谢与芳名录</h2>
+                <p>Editorial Board & Acknowledgements</p>
+                <button class="enter-btn" onclick="goToPage('page-committee')">点击进入详情 ➔</button>
+            </div>
+        </section>
+
     </main>
+
+
+    <div class="fullscreen-detail-page" id="page-principals">
+        <div class="detail-container">
+            <button class="back-btn" onclick="backToMenu('page-principals')">← 返回大图目录</button>
+            <h1>献词</h1>
+            <div class="info-card"><h3>董事长献词</h3><p>在此填入董事长给毕业生的勉励语内容...</p></div>
+            <div class="info-card"><h3>校长献词</h3><p>在此填入校长对 2026 届学生的寄语内容...</p></div>
+            <div class="info-card"><h3>五大商会代表献词</h3><p>在此填入商会代表给毕业生的祝贺内容...</p></div>
+        </div>
+    </div>
+
+    <div class="fullscreen-detail-page" id="page-school">
+        <div class="detail-container">
+            <button class="back-btn" onclick="backToMenu('page-school')">← 返回大图目录</button>
+            <h1>学校简介</h1>
+            <div class="info-card">
+                <h3>学校精神与堡垒</h3>
+                <p>校歌、校旗、校徽意义、校训、创造奇迹、中华颂、八大信条。</p>
+            </div>
+            <div class="info-card"><h3>百年校史简述</h3><p>在此填入学校发展历史沿革与重要里程碑内容...</p></div>
+        </div>
+    </div>
+
+    <div class="fullscreen-detail-page" id="page-teachers">
+        <div class="detail-container">
+            <button class="back-btn" onclick="backToMenu('page-teachers')">← 返回大图目录</button>
+            <h1>教职员献词</h1>
+            <div class="info-card"><h3>副校长献词</h3><p>在此填入副校长的勉励语...</p></div>
+            <div class="info-card"><h3>各处室主任寄语</h3><p>在此填入教务处、学务处等主任的祝福...</p></div>
+            <div class="info-card"><h3>全体教职员赠言</h3><p>在此填入老师们对 2026 届毕业生的共同期许...</p></div>
+        </div>
+    </div>
+
+    <div class="fullscreen-detail-page" id="page-graduates">
+        <div class="detail-container">
+            <button class="back-btn" onclick="backToMenu('page-graduates')">← 返回大图目录</button>
+            <h1>高三毕业生名单 (2026)</h1>
+            <div class="info-card"><p><strong>班级信息：</strong>班导师赠言、班委会名单、班训。</p></div>
+            <h2 style="margin-top:30px; border:none; padding:0; color:#111;">同学通讯录</h2>
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead><tr><th>姓名</th><th>学号</th><th>生日</th><th>IG / 联络</th></tr></thead>
+                    <tbody><tr><td>同学姓名</td><td>210001</td><td>05-20</td><td>@student_2026</td></tr></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="fullscreen-detail-page" id="page-activities">
+        <div class="detail-container">
+            <button class="back-btn" onclick="backToMenu('page-activities')">← 返回大图目录</button>
+            <h1>校园活动回顾</h1>
+            <div class="info-card"><h3>主要集体活动</h3><p>一日营、成年礼、运动会 / 义跑的回顾文字与精彩照片位置...</p></div>
+            <div class="info-card"><h3>联课与服务团体</h3><p>学会、制服团体合照及荣誉榜展示...</p></div>
+        </div>
+    </div>
+
+    <div class="fullscreen-detail-page" id="page-committee">
+        <div class="detail-container">
+            <button class="back-btn" onclick="backToMenu('page-committee')">← 返回大图目录</button>
+            <h1>编委会致谢与芳名录</h1>
+            <div class="info-card"><h3>毕联会感言</h3><p>完成这本毕业刊的心路历程，主席、主编及各部长感言...</p></div>
+            <div class="info-card"><h3>芳名录</h3><p>鸣谢广告赞助商及社会热心人士的捐款支持。</p></div>
+        </div>
+    </div>
+
 
     <script>
         gsap.registerPlugin(ScrollTrigger);
 
-        // 动画：同步旋转 + 放大
+        window.scrollTo(0, 0);
+
         const tl = gsap.timeline({
             scrollTrigger: {
-                trigger: ".scroll-space",
+                trigger: ".scroll-trigger-space",
                 start: "top top",
                 end: "bottom top",
                 scrub: 1,
-                onLeave: () => finalizeTransition()
+                onLeave: () => {
+                    const intro = document.getElementById('intro-wrapper');
+                    if (intro) {
+                        intro.style.opacity = '0';
+                        intro.style.visibility = 'hidden';
+                        intro.style.pointerEvents = 'none';
+                    }
+                }
             }
         });
 
-        tl.to("#gearIcon", { rotation: 1440, ease: "none" }, 0)
-          .to("#hero", { scale: 60, opacity: 0, ease: "power2.inOut" }, 0);
+        tl.to("#gearIcon", { rotation: 1200, ease: "none" }, 0)
+          .to("#hero", { scale: 50, opacity: 0, ease: "power1.inOut" }, 0);
 
-        function finalizeTransition() {
-            const main = document.getElementById('mainContent');
-            const intro = document.getElementById('intro-wrapper');
-
-            // 1. 先让内容可见
-            main.style.visibility = 'visible';
-            main.style.opacity = '1';
-            document.body.style.backgroundColor = "#fff";
-
-            // 2. 移除封面
-            if (intro) intro.remove();
-
-            // 3. 强制回到顶部并刷新
-            window.scrollTo(0, 0);
-            ScrollTrigger.refresh();
-        }
+        function goToPage(pageId) { document.getElementById(pageId).classList.add('active'); }
+        function backToMenu(pageId) { document.getElementById(pageId).classList.remove('active'); }
     </script>
 </body>
 </html>
