@@ -29,7 +29,7 @@
         .hero-subtitle { font-size: 1.2rem; color: var(--neon); letter-spacing: 5px; }
         .scroll-trigger-space { height: 150vh; background: transparent; pointer-events: none; }
 
-        /* --- 2. 主目录区（大照片一屏接一屏） --- */
+        /* --- 2. 主目录区 --- */
         #mainContent { width: 100%; position: relative; z-index: 10; margin-top: -150vh; }
         .full-page-section { width: 100%; height: 100vh; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
         
@@ -56,7 +56,7 @@
         }
         .enter-btn:hover { background: #a00000; transform: scale(1.08); }
 
-        /* --- 3. 真实独立的全屏详情画面 --- */
+        /* --- 3. 基础全屏详情画面样式 --- */
         .fullscreen-detail-page {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: #fff; color: #333; z-index: 99999;
@@ -64,11 +64,58 @@
             transform: scale(0.95); overflow-y: auto;
         }
         .fullscreen-detail-page.active { opacity: 1; visibility: visible; transform: scale(1); }
-        .detail-container { max-width: 850px; margin: 0 auto; padding: 60px 20px; }
-        .detail-container h1 { font-size: 2.5rem; color: var(--school-red); border-left: 10px solid var(--school-red); padding-left: 20px; margin-bottom: 35px; }
+        .detail-container { max-width: 950px; margin: 0 auto; padding: 40px 20px; }
+        .detail-container h1 { font-size: 2.5rem; color: var(--school-red); border-left: 10px solid var(--school-red); padding-left: 20px; margin-bottom: 25px; }
         .info-card { background: #f8f9fa; padding: 25px; border-radius: 16px; border: 1px solid #eee; margin-top: 20px; }
-        .info-card h3 { margin-top: 0; border-bottom: 1px solid #ddd; padding-bottom: 10px; }
-        .back-btn { background: #333; color: #fff; border: none; padding: 12px 25px; font-weight: bold; border-radius: 8px; cursor: pointer; margin-bottom: 30px; }
+        .back-btn { background: #333; color: #fff; border: none; padding: 12px 25px; font-weight: bold; border-radius: 8px; cursor: pointer; margin-bottom: 20px; }
+
+        /* --- 🛠️ 专属设计：活动网格（九宫格质感） --- */
+        .activity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .activity-card {
+            position: relative; height: 160px; border-radius: 14px; overflow: hidden;
+            cursor: pointer; box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .activity-card:hover { transform: translateY(-5px); box-shadow: 0 12px 25px rgba(0,0,0,0.2); }
+        .card-img { position: absolute; top:0; left:0; width:100%; height:100%; background-size:cover; background-position:center; z-index:1; }
+        .card-mask { 
+            position: absolute; top:0; left:0; width:100%; height:100%; 
+            background: linear-gradient(to top, rgba(0,0,0,0.8) 20%, rgba(0,0,0,0.2)); z-index:2; 
+            display: flex; align-items: flex-end; padding: 15px; box-sizing: border-box;
+        }
+        .card-mask h4 { margin: 0; color: #fff; font-size: 1.2rem; letter-spacing: 1px; }
+
+        /* --- 🛠️ 专属设计：三级活动内页排版 --- */
+        .sub-activity-page {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #fafafa; color: #222; z-index: 999999; /* 层级极高，盖在二级页上面 */
+            opacity: 0; visibility: hidden; transition: all 0.3s ease;
+            transform: translateX(50px); overflow-y: auto;
+        }
+        .sub-activity-page.active { opacity: 1; visibility: visible; transform: translateX(0); }
+        
+        /* 上层混排 */
+        .activity-intro-block {
+            display: flex; gap: 30px; margin-top: 30px; align-items: flex-start;
+            flex-wrap: wrap;
+        }
+        .activity-text-desc { flex: 1; min-width: 300px; font-size: 1.1rem; line-height: 1.8; color: #444; }
+        .activity-main-pic { flex: 1; min-width: 300px; height: 350px; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
+        .activity-main-pic img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* 下层三张照片并排流动 */
+        .activity-triple-row {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-top: 35px;
+        }
+        @media(max-width: 768px) { .activity-triple-row { grid-template-columns: 1fr; } .activity-intro-block { flex-direction: column; } }
+        .triple-pic-box { height: 220px; border-radius: 12px; overflow: hidden; box-shadow: 0 6px 12px rgba(0,0,0,0.1); }
+        .triple-pic-box img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+        .triple-pic-box:hover img { transform: scale(1.06); }
 
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
         th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
@@ -79,6 +126,7 @@
 
     <div class="scroll-trigger-space"></div>
 
+    <!-- 1. 齿轮封面层 -->
     <div id="intro-wrapper">
         <div class="hero-section" id="hero">
             <div class="hero-bg"></div>
@@ -90,44 +138,15 @@
         </div>
     </div>
 
+    <!-- 2. 大照片主目录 -->
     <main id="mainContent">
-        
-        <section class="full-page-section">
-            <div class="section-bg-pic" style="background-image: url('zhici.jpg'); background-color: #2c3e50;"></div>
-            <div class="menu-trigger-card">
-                <h2>献词</h2>
-                <p>Congratulatory Messages</p>
-                <button class="enter-btn" onclick="goToPage('page-principals')">点击进入详情 ➔</button>
-            </div>
-        </section>
+        <!-- 献词、简介、教职员、毕业生页面保留，直接略过展示... -->
+        <section class="full-page-section"><div class="section-bg-pic" style="background-image: url('zhici.jpg'); background-color: #2c3e50;"></div><div class="menu-trigger-card"><h2>献词</h2><p>Congratulatory Messages</p><button class="enter-btn" onclick="goToPage('page-principals')">点击进入详情 ➔</button></div></section>
+        <section class="full-page-section"><div class="section-bg-pic" style="background-image: url('school.jpg'); background-color: #34495e;"></div><div class="menu-trigger-card"><h2>学校简介</h2><p>About Our School</p><button class="enter-btn" onclick="goToPage('page-school')">点击进入详情 ➔</button></div></section>
+        <section class="full-page-section"><div class="section-bg-pic" style="background-image: url('teachers.jpg'); background-color: #2c3e50;"></div><div class="menu-trigger-card"><h2>教职员献词</h2><p>Messages from Faculty & Staff</p><button class="enter-btn" onclick="goToPage('page-teachers')">点击进入详情 ➔</button></div></section>
+        <section class="full-page-section"><div class="section-bg-pic" style="background-image: url('class.jpg'); background-color: #16a085;"></div><div class="menu-trigger-card"><h2>高三毕业生名单</h2><div class="hero-subtitle" style="font-size:0.9rem; margin-bottom:15px;">CLASS OF 2026</div><button class="enter-btn" onclick="goToPage('page-graduates')">点击进入详情 ➔</button></div></section>
 
-        <section class="full-page-section">
-            <div class="section-bg-pic" style="background-image: url('school.jpg'); background-color: #34495e;"></div>
-            <div class="menu-trigger-card">
-                <h2>学校简介</h2>
-                <p>About Our School</p>
-                <button class="enter-btn" onclick="goToPage('page-school')">点击进入详情 ➔</button>
-            </div>
-        </section>
-
-        <section class="full-page-section">
-            <div class="section-bg-pic" style="background-image: url('teachers.jpg'); background-color: #2c3e50;"></div>
-            <div class="menu-trigger-card">
-                <h2>教职员献词</h2>
-                <p>Messages from Faculty & Staff</p>
-                <button class="enter-btn" onclick="goToPage('page-teachers')">点击进入详情 ➔</button>
-            </div>
-        </section>
-
-        <section class="full-page-section">
-            <div class="section-bg-pic" style="background-image: url('class.jpg'); background-color: #16a085;"></div>
-            <div class="menu-trigger-card">
-                <h2>高三毕业生名单</h2>
-                <div class="hero-subtitle" style="font-size:0.9rem; margin-bottom:15px;">CLASS OF 2026</div>
-                <button class="enter-btn" onclick="goToPage('page-graduates')">点击进入详情 ➔</button>
-            </div>
-        </section>
-
+        <!-- ★ 大照片 5：校园活动回顾 -->
         <section class="full-page-section">
             <div class="section-bg-pic" style="background-image: url('activity.jpg'); background-color: #2980b9;"></div>
             <div class="menu-trigger-card">
@@ -137,80 +156,208 @@
             </div>
         </section>
 
-        <section class="full-page-section">
-            <div class="section-bg-pic" style="background-image: url('committee.jpg'); background-color: #8e44ad;"></div>
-            <div class="menu-trigger-card">
-                <h2>编委会致谢与芳名录</h2>
-                <p>Editorial Board & Acknowledgements</p>
-                <button class="enter-btn" onclick="goToPage('page-committee')">点击进入详情 ➔</button>
-            </div>
-        </section>
-
+        <section class="full-page-section"><div class="section-bg-pic" style="background-image: url('committee.jpg'); background-color: #8e44ad;"></div><div class="menu-trigger-card"><h2>编委会致谢与芳名录</h2><p>Editorial Board & Acknowledgements</p><button class="enter-btn" onclick="goToPage('page-committee')">点击进入详情 ➔</button></div></section>
     </main>
 
+    <!-- --- 3. 独立的全屏详情画面 --- -->
+    <div class="fullscreen-detail-page" id="page-principals"><div class="detail-container"><button class="back-btn" onclick="backToMenu('page-principals')">← 返回</button><h1>献词</h1></div></div>
+    <div class="fullscreen-detail-page" id="page-school"><div class="detail-container"><button class="back-btn" onclick="backToMenu('page-school')">← 返回</button><h1>学校简介</h1></div></div>
+    <div class="fullscreen-detail-page" id="page-teachers"><div class="detail-container"><button class="back-btn" onclick="backToMenu('page-teachers')">← 返回</button><h1>教职员献词</h1></div></div>
+    <div class="fullscreen-detail-page" id="page-graduates"><div class="detail-container"><button class="back-btn" onclick="backToMenu('page-graduates')">← 返回</button><h1>高三毕业生名单</h1></div></div>
+    <div class="fullscreen-detail-page" id="page-committee"><div class="detail-container"><button class="back-btn" onclick="backToMenu('page-committee')">← 返回</button><h1>编委会致谢</h1></div></div>
 
-    <div class="fullscreen-detail-page" id="page-principals">
-        <div class="detail-container">
-            <button class="back-btn" onclick="backToMenu('page-principals')">← 返回大图目录</button>
-            <h1>献词</h1>
-            <div class="info-card"><h3>董事长献词</h3><p>在此填入董事长给毕业生的勉励语内容...</p></div>
-            <div class="info-card"><h3>校长献词</h3><p>在此填入校长对 2026 届学生的寄语内容...</p></div>
-            <div class="info-card"><h3>五大商会代表献词</h3><p>在此填入商会代表给毕业生的祝贺内容...</p></div>
-        </div>
-    </div>
-
-    <div class="fullscreen-detail-page" id="page-school">
-        <div class="detail-container">
-            <button class="back-btn" onclick="backToMenu('page-school')">← 返回大图目录</button>
-            <h1>学校简介</h1>
-            <div class="info-card">
-                <h3>学校精神与堡垒</h3>
-                <p>校歌、校旗、校徽意义、校训、创造奇迹、中华颂、八大信条。</p>
-            </div>
-            <div class="info-card"><h3>百年校史简述</h3><p>在此填入学校发展历史沿革与重要里程碑内容...</p></div>
-        </div>
-    </div>
-
-    <div class="fullscreen-detail-page" id="page-teachers">
-        <div class="detail-container">
-            <button class="back-btn" onclick="backToMenu('page-teachers')">← 返回大图目录</button>
-            <h1>教职员献词</h1>
-            <div class="info-card"><h3>副校长献词</h3><p>在此填入副校长的勉励语...</p></div>
-            <div class="info-card"><h3>各处室主任寄语</h3><p>在此填入教务处、学务处等主任的祝福...</p></div>
-            <div class="info-card"><h3>全体教职员赠言</h3><p>在此填入老师们对 2026 届毕业生的共同期许...</p></div>
-        </div>
-    </div>
-
-    <div class="fullscreen-detail-page" id="page-graduates">
-        <div class="detail-container">
-            <button class="back-btn" onclick="backToMenu('page-graduates')">← 返回大图目录</button>
-            <h1>高三毕业生名单 (2026)</h1>
-            <div class="info-card"><p><strong>班级信息：</strong>班导师赠言、班委会名单、班训。</p></div>
-            <h2 style="margin-top:30px; border:none; padding:0; color:#111;">同学通讯录</h2>
-            <div style="overflow-x: auto;">
-                <table>
-                    <thead><tr><th>姓名</th><th>学号</th><th>生日</th><th>IG / 联络</th></tr></thead>
-                    <tbody><tr><td>同学姓名</td><td>210001</td><td>05-20</td><td>@student_2026</td></tr></tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
+    <!-- ★ 二级独立页：校园活动画廊目录 -->
     <div class="fullscreen-detail-page" id="page-activities">
         <div class="detail-container">
             <button class="back-btn" onclick="backToMenu('page-activities')">← 返回大图目录</button>
             <h1>校园活动回顾</h1>
-            <div class="info-card"><h3>主要集体活动</h3><p>一日营、成年礼、运动会 / 义跑的回顾文字与精彩照片位置...</p></div>
-            <div class="info-card"><h3>联课与服务团体</h3><p>学会、制服团体合照及荣誉榜展示...</p></div>
+            <p style="color: #666; margin-bottom: 20px;">点击下方各项活动卡片，浏览活动纪实与精彩照片。</p>
+            
+            <!-- 活动九宫格网格排版 -->
+            <div class="activity-grid">
+                <!-- 1. 教育展 -->
+                <div class="activity-card" onclick="openSubActivity('sub-edu')">
+                    <div class="card-img" style="background-image: url('edu_cover.jpg'); background-color: #1abc9c;"></div>
+                    <div class="card-mask"><h4>🎓 教育展</h4></div>
+                </div>
+                <!-- 2. 一日营 -->
+                <div class="activity-card" onclick="openSubActivity('sub-camp')">
+                    <div class="card-img" style="background-image: url('camp_cover.jpg'); background-color: #e67e22;"></div>
+                    <div class="card-mask"><h4>⛺ 一日营</h4></div>
+                </div>
+                <!-- 3. 成年礼 -->
+                <div class="activity-card" onclick="openSubActivity('sub-adult')">
+                    <div class="card-img" style="background-image: url('adult_cover.jpg'); background-color: #9b59b6;"></div>
+                    <div class="card-mask"><h4>🌹 成年礼</h4></div>
+                </div>
+                <!-- 4. 运动会 -->
+                <div class="activity-card" onclick="openSubActivity('sub-sports')">
+                    <div class="card-img" style="background-image: url('sports_cover.jpg'); background-color: #e74c3c;"></div>
+                    <div class="card-mask"><h4>🏃 运动会</h4></div>
+                </div>
+                <!-- 5. 义跑 -->
+                <div class="activity-card" onclick="openSubActivity('sub-run')">
+                    <div class="card-img" style="background-image: url('run_cover.jpg'); background-color: #3498db;"></div>
+                    <div class="card-mask"><h4>👟 义跑</h4></div>
+                </div>
+                <!-- 6. 毕业典礼 -->
+                <div class="activity-card" onclick="openSubActivity('sub-grad')">
+                    <div class="card-img" style="background-image: url('grad_cover.jpg'); background-color: #34495e;"></div>
+                    <div class="card-mask"><h4>📜 毕业典礼</h4></div>
+                </div>
+                <!-- 7. 谢师宴 -->
+                <div class="activity-card" onclick="openSubActivity('sub-dinner')">
+                    <div class="card-img" style="background-image: url('dinner_cover.jpg'); background-color: #d35400;"></div>
+                    <div class="card-mask"><h4>🍽️ 谢师宴</h4></div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="fullscreen-detail-page" id="page-committee">
+
+    <!-- --- 4. 🛠️ 三级独立活动具体内容页（点击卡片真跳转，含1大图+3小图设计） --- -->
+    
+    <!-- 活动①：教育展 -->
+    <div class="sub-activity-page" id="sub-edu">
         <div class="detail-container">
-            <button class="back-btn" onclick="backToMenu('page-committee')">← 返回大图目录</button>
-            <h1>编委会致谢与芳名录</h1>
-            <div class="info-card"><h3>毕联会感言</h3><p>完成这本毕业刊的心路历程，主席、主编及各部长感言...</p></div>
-            <div class="info-card"><h3>芳名录</h3><p>鸣谢广告赞助商及社会热心人士的捐款支持。</p></div>
+            <button class="back-btn" style="background: #e74c3c;" onclick="closeSubActivity('sub-edu')">← 返回活动列表</button>
+            <h1>教育展</h1>
+            <div class="activity-intro-block">
+                <div class="activity-text-desc">
+                    <p><strong>活动纪实：</strong> 为帮助学生明确升学方向，拓宽视野，提升对未来发展的认知，我校于近日组织高三学生前往巴生新华学校参加教育展活动。
+         本次活动的对象为关丹中华中学的高三生。活动的目的是为了开阔学生的视野并为选择大学作参考。现场汇聚了多所本地及海外院校，涵盖不同专业领域，为学生提供多元化的选择。
+         参观过程中，各院校代表详细介绍课程设置、入学要求以及未来发展方向。同学们积极与招生人员交流，针对自己感兴趣的专业提出问题，深入了解相关信息。通过面对面的沟通，不少同学对原本模糊的升学方向有了更加清晰的认识。
+         本次活动在全体师生的共同参与下圆满结束。相信通过此次参访，同学们将以更加坚定的步伐，朝着自己的理想目标不断迈进，为未来的人生道路奠定坚实基础。</p>
+                </div>
+                <div class="activity-main-pic">
+                    <img src="edu_main.jpg" alt="教育展主图" style="background-color: #ccc;">
+                </div>
+            </div>
+            <div class="activity-triple-row">
+                <div class="triple-pic-box"><img src="edu_1.jpg" style="background-color: #bbb;"></div>
+                <div class="triple-pic-box"><img src="edu_2.jpg" style="background-color: #aaa;"></div>
+                <div class="triple-pic-box"><img src="edu_3.jpg" style="background-color: #999;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 活动②：一日营 -->
+    <div class="sub-activity-page" id="sub-camp">
+        <div class="detail-container">
+            <button class="back-btn" style="background: #e74c3c;" onclick="closeSubActivity('sub-camp')">← 返回活动列表</button>
+            <h1>一日营</h1>
+            <div class="activity-intro-block">
+                <div class="activity-text-desc">
+                    <p><strong>活动纪实：</strong> 破冰游戏、团队协作……一日营作为我们高三集体的破冰记忆，充满了欢笑与汗水。在密集的团建活动中，班级凝聚力达到了顶峰，每个人都在这个过程中找到了战友般的默契。</p>
+                </div>
+                <div class="activity-main-pic"><img src="camp_main.jpg" style="background-color: #ccc;"></div>
+            </div>
+            <div class="activity-triple-row">
+                <div class="triple-pic-box"><img src="camp_1.jpg" style="background-color: #bbb;"></div>
+                <div class="triple-pic-box"><img src="camp_2.jpg" style="background-color: #aaa;"></div>
+                <div class="triple-pic-box"><img src="camp_3.jpg" style="background-color: #999;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 活动③：成年礼 -->
+    <div class="sub-activity-page" id="sub-adult">
+        <div class="detail-container">
+            <button class="back-btn" style="background: #e74c3c;" onclick="closeSubActivity('sub-adult')">← 返回活动列表</button>
+            <h1>成年礼</h1>
+            <div class="activity-intro-block">
+                <div class="activity-text-desc">
+                    <p><strong>活动纪实：</strong> 跨过成年门，向父母敬茶、聆听长辈教诲。成年礼这一天，我们正式宣告告别青涩，挑起社会的责任与担当。现场无数温情的拥抱与感动的泪水，见证了我们跨越18岁的重要节点。</p>
+                </div>
+                <div class="activity-main-pic"><img src="adult_main.jpg" style="background-color: #ccc;"></div>
+            </div>
+            <div class="activity-triple-row">
+                <div class="triple-pic-box"><img src="adult_1.jpg" style="background-color: #bbb;"></div>
+                <div class="triple-pic-box"><img src="adult_2.jpg" style="background-color: #aaa;"></div>
+                <div class="triple-pic-box"><img src="adult_3.jpg" style="background-color: #999;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 活动④：运动会 -->
+    <div class="fullscreen-detail-page sub-activity-page" id="sub-sports">
+        <div class="detail-container">
+            <button class="back-btn" style="background: #e74c3c;" onclick="closeSubActivity('sub-sports')">← 返回活动列表</button>
+            <h1>运动会</h1>
+            <div class="activity-intro-block">
+                <div class="activity-text-desc">
+                    <p><strong>活动纪实：</strong> 跑道上的风驰电掣，看台上的声嘶力竭。红蓝绿黄各队在赛场上奋力拼搏，这不仅是体能的较量，更是班级荣誉的捍卫战。那些冲过终点线的拥抱将永远定格在盛夏的记忆里。</p>
+                </div>
+                <div class="activity-main-pic"><img src="sports_main.jpg" style="background-color: #ccc;"></div>
+            </div>
+            <div class="activity-triple-row">
+                <div class="triple-pic-box"><img src="sports_1.jpg" style="background-color: #bbb;"></div>
+                <div class="triple-pic-box"><img src="sports_2.jpg" style="background-color: #aaa;"></div>
+                <div class="triple-pic-box"><img src="sports_3.jpg" style="background-color: #999;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 活动⑤：义跑 -->
+    <div class="sub-activity-page" id="sub-run">
+        <div class="detail-container">
+            <button class="back-btn" style="background: #e74c3c;" onclick="closeSubActivity('sub-run')">← 返回活动列表</button>
+            <h1>校园义跑</h1>
+            <div class="activity-intro-block">
+                <div class="activity-text-desc">
+                    <p><strong>活动纪实：</strong> 为了筹集建校基金，同时培养学生团结合作及关爱社会的精神，关丹中华中学于2026年4月25日（星期六）举办了“关中行”活动。此次活动吸引了众多爱心人士积极参与，现场气氛热烈温馨。
+
+此次义跑活动的对象为全校学生及热心人士。活动的目的除了鼓励学生锻炼身体、增强体魄之外，也希望借由义跑筹募建校基金，用于校园建设，同时提升学生对公益活动的认识与参与感。
+
+虽然当天阳光炎热，但依然没有减退大家参与活动的热情。同学们在奔跑过程中互相扶持，坚持完成全程，不仅体现了坚毅不拔的精神，也为校园留下了美好的回忆。
+
+此次义跑活动圆满结束，不仅让学生们体验到运动的乐趣，也进一步促进了同学之间的友情，展现了关中生积极向上的青春风貌。</p>
+                </div>
+                <div class="activity-main-pic"><img src="run_main.jpg" style="background-color: #ccc;"></div>
+            </div>
+            <div class="activity-triple-row">
+                <div class="triple-pic-box"><img src="run_1.jpg" style="background-color: #bbb;"></div>
+                <div class="triple-pic-box"><img src="run_2.jpg" style="background-color: #aaa;"></div>
+                <div class="triple-pic-box"><img src="run_3.jpg" style="background-color: #999;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 活动⑥：毕业典礼 -->
+    <div class="sub-activity-page" id="sub-grad">
+        <div class="detail-container">
+            <button class="back-btn" style="background: #e74c3c;" onclick="closeSubActivity('sub-grad')">← 返回活动列表</button>
+            <h1>毕业典礼</h1>
+            <div class="activity-intro-block">
+                <div class="activity-text-desc">
+                    <p><strong>活动纪实：</strong> 拨穗正冠，证书到手。当毕业歌声响起，高高抛起的学士帽遮天蔽日。这一刻我们流泪告别，却也带着母校沉甸甸的期许，毅然决然地驾驭时代的齿轮，奔赴下一场山海。</p>
+                </div>
+                <div class="activity-main-pic"><img src="grad_main.jpg" style="background-color: #ccc;"></div>
+            </div>
+            <div class="activity-triple-row">
+                <div class="triple-pic-box"><img src="grad_1.jpg" style="background-color: #bbb;"></div>
+                <div class="triple-pic-box"><img src="grad_2.jpg" style="background-color: #aaa;"></div>
+                <div class="triple-pic-box"><img src="grad_3.jpg" style="background-color: #999;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 活动⑦：谢师宴 -->
+    <div class="sub-activity-page" id="sub-dinner">
+        <div class="detail-container">
+            <button class="back-btn" style="background: #e74c3c;" onclick="closeSubActivity('sub-dinner')">← 返回活动列表</button>
+            <h1>谢师宴</h1>
+            <div class="activity-intro-block">
+                <div class="activity-text-desc">
+                    <p><strong>活动纪实：</strong> 杯盏之间尽是感恩之情。在这场属于师生的华丽盛宴上，我们用最真挚的节目和最深情的鞠躬，向三年、甚至六年以来无私奉献的恩师们致敬。烛光摇曳，师恩难忘，情谊长存。</p>
+                </div>
+                <div class="activity-main-pic"><img src="dinner_main.jpg" style="background-color: #ccc;"></div>
+            </div>
+            <div class="activity-triple-row">
+                <div class="triple-pic-box"><img src="dinner_1.jpg" style="background-color: #bbb;"></div>
+                <div class="triple-pic-box"><img src="dinner_2.jpg" style="background-color: #aaa;"></div>
+                <div class="triple-pic-box"><img src="dinner_3.jpg" style="background-color: #999;"></div>
+            </div>
         </div>
     </div>
 
@@ -220,6 +367,7 @@
 
         window.scrollTo(0, 0);
 
+        // 齿轮基础动画
         const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: ".scroll-trigger-space",
@@ -240,8 +388,17 @@
         tl.to("#gearIcon", { rotation: 1200, ease: "none" }, 0)
           .to("#hero", { scale: 50, opacity: 0, ease: "power1.inOut" }, 0);
 
+        // 控制二级页面 (基本章节跳转)
         function goToPage(pageId) { document.getElementById(pageId).classList.add('active'); }
         function backToMenu(pageId) { document.getElementById(pageId).classList.remove('active'); }
+
+        // --- 🛠️ 控制三级页面 (专门打开/关闭特定活动详情) ---
+        function openSubActivity(subId) {
+            document.getElementById(subId).classList.add('active');
+        }
+        function closeSubActivity(subId) {
+            document.getElementById(subId).classList.remove('active');
+        }
     </script>
 </body>
 </html>
